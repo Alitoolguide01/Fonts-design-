@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TextStudio - Font Generator & 3D Text Effects</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --card: #1a1a26;
+    --border: #2a2a3a;
+    --accent: #ff3c78;
+    --accent2: #00d4ff;
+    --accent3: #ffe600;
+    --text: #f0f0ff;
+    --muted: #888;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 20px;
+    font-weight: 900;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 2px;
+  }
+
+  nav { display: flex; gap: 6px; }
+  nav a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  nav a:hover, nav a.active { color: var(--text); background: var(--card); }
+
+  .btn-signup {
+    background: linear-gradient(135deg, var(--accent), #ff6b35);
+    color: white !important;
+    border-radius: 8px !important;
+    font-weight: 700 !important;
+  }
+  .btn-signup:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  /* PROMO BANNER */
+  .promo-banner {
+    background: linear-gradient(135deg, #1a0a2e, #0a1a2e);
+    border: 1px solid #2a1a4e;
+    margin: 20px 24px;
+    border-radius: 12px;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .promo-banner .crown {
+    font-size: 32px;
+  }
+
+  .promo-text h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    color: var(--accent3);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .promo-text p { font-size: 13px; color: var(--muted); }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), #ff6b35);
+    color: white;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,60,120,0.4); }
+
+  /* HERO */
+  .hero {
+    text-align: center;
+    padding: 40px 24px 20px;
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(32px, 6vw, 64px);
+    letter-spacing: 3px;
+    line-height: 1;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, #fff 30%, var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero p {
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 500px;
+    margin: 0 auto 24px;
+    line-height: 1.5;
+  }
+
+  /* SEARCH BAR */
+  .search-wrap {
+    max-width: 600px;
+    margin: 0 auto 32px;
+    position: relative;
+    display: flex;
+    gap: 10px;
+  }
+
+  .search-wrap input {
+    flex: 1;
+    background: var(--card);
+    border: 2px solid var(--border);
+    color: var(--text);
+    padding: 14px 20px;
+    border-radius: 12px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .search-wrap input:focus { border-color: var(--accent); }
+  .search-wrap input::placeholder { color: var(--muted); }
+
+  .btn-generate {
+    background: linear-gradient(135deg, var(--accent2), #0088cc);
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .btn-generate:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,212,255,0.4); }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    gap: 8px;
+    padding: 0 24px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .tab {
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+  .tab.active, .tab:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+
+  /* SECTION LABEL */
+  .section-label {
+    padding: 0 24px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label h2 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 22px;
+    letter-spacing: 2px;
+    color: var(--accent3);
+  }
+  .section-label span {
+    font-size: 12px;
+    color: var(--muted);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 8px;
+  }
+
+  /* EFFECTS GRID */
+  .effects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+    padding: 0 24px 40px;
+  }
+
+  .effect-card {
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    aspect-ratio: 16/9;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid var(--border);
+  }
+
+  .effect-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+    border-color: var(--accent2);
+    z-index: 2;
+  }
+
+  .effect-card .preview {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: clamp(14px, 2.5vw, 22px);
+    letter-spacing: 1px;
+    text-align: center;
+    padding: 8px;
+    line-height: 1.1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* INDIVIDUAL STYLES */
+  .style-neon {
+    background: #0a0020;
+    color: #ff00ff;
+    text-shadow: 0 0 10px #ff00ff, 0 0 30px #ff00ff, 0 0 60px #cc00cc;
+    font-family: 'Orbitron', sans-serif;
+  }
+  .style-fire {
+    background: linear-gradient(135deg, #1a0000, #2a0500);
+    color: #ff6600;
+    text-shadow: 0 0 8px #ff4400, 0 -2px 12px #ff8800, 0 2px 20px #ff2200;
+    font-family: 'Bebas Neue', cursive;
+    letter-spacing: 3px;
+  }
+  .style-gold {
+    background: linear-gradient(135deg, #1a1000, #2a2000);
+    color: #ffd700;
+    text-shadow: 0 1px 0 #a07800, 2px 2px 4px rgba(0,0,0,0.8);
+    font-family: 'Bebas Neue', cursive;
+    letter-spacing: 2px;
+  }
+  .style-3d-blue {
+    background: linear-gradient(135deg, #001a3a, #002a50);
+    color: #00d4ff;
+    text-shadow: 2px 2px 0 #004466, 4px 4px 0 #003355, 0 0 20px rgba(0,212,255,0.5);
+    font-family: 'Orbitron', sans-serif;
+  }
+  .style-retro {
+    background: linear-gradient(135deg, #1a0a3a, #2a1050);
+    color: #ff6bff;
+    font-family: 'Bebas Neue', cursive;
+    letter-spacing: 4px;
+    text-shadow: 3px 3px 0 #cc00cc;
+  }
+  .style-chrome {
+    background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+    background-clip: text;
+    color: transparent;
+    background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+    color: #c0c0c0;
+    text-shadow: 1px 1px 0 #fff, -1px -1px 0 #555;
+    font-family: 'Bebas Neue', cursive;
+    letter-spacing: 3px;
+  }
+  .style-minecraft {
+    background: #3a7a1a;
+    color: #ffffff;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px !important;
+    text-shadow: 2px 2px 0 #1a4a00;
+    image-rendering: pixelated;
+  }
+  .style-barbie {
+    background: linear-gradient(135deg, #ff69b4, #ff1493);
+    color: #fff;
+    font-family: 'Bebas Neue', cursive;
+    letter-spacing: 4px;
+    text-shadow: 2px 2px 0 #cc0077;
+  }
+  .style-disney {
+    background: linear-gradient(135deg, #001060, #000530);
+    color: #ffe066;
+    font-family: 'Bebas Neue', cursive;
+    letter-spacing: 3px;
+    text-shadow: 0 0 10px #ffe066, 2px 2px 4px rgba(0,0,0,0.8);
+  }
+  .style-graffiti {
+    background: linear-gradient(135deg, #1a0a00, #2a1500);
+    color: #ff4400;
+    font-family: 'Bebas Neue', cursive;
+    letter-spacing: 2px;
+    text-shadow: -2px -2px 0 #ff8800, 2px 2px 0 #aa2200;
+  }
+  .style-ice {
+    background: linear-gradient(135deg, #001a3a, #002244);
+    color: #aaddff;
+    font-family: 'Orbitron', sans-serif;
+    text-shadow: 0 0 8px #aaddff, 2px 2px 0 #004488;
+  }
+  .style-elegant {
+    background: #0a0a0a;
+    color: #d4af37;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px !important;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    border: 1px solid #d4af37;
+  }
+  .style-arcade {
+    background: linear-gradient(135deg, #000a1a, #001a30);
+    color: #00ff88;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px !important;
+    text-shadow: 0 0 8px #00ff88;
+    letter-spacing: 2px;
+  }
+  .style-mario {
+    background: linear-gradient(135deg, #1a0000, #3a0000);
+    color: #ff2200;
+    font-family: 'Bebas Neue', cursive;
+    letter-spacing: 3px;
+    text-shadow: 3px 3px 0 #880000, 0 0 20px rgba(255,34,0,0.4);
+  }
+  .style-luxury {
+    background: linear-gradient(135deg, #050505, #0f0f0f);
+    color: #c9a84c;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px !important;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+  }
+  .style-cyberpunk {
+    background: linear-gradient(135deg, #0a0020, #001a0a);
+    color: #00ff88;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px !important;
+    text-shadow: 0 0 10px #00ff88, 2px 0 #ff00ff;
+  }
+  .style-stamp {
+    background: #f5f0e0;
+    color: #1a1a1a;
+    font-family: 'Bebas Neue', cursive;
+    letter-spacing: 4px;
+    font-size: 16px !important;
+    border: 4px solid #1a1a1a;
+  }
+  .style-glow-pink {
+    background: #0a0015;
+    color: #ff69ff;
+    font-family: 'Orbitron', sans-serif;
+    text-shadow: 0 0 10px #ff00ff, 0 0 30px #cc00cc, 0 0 60px #aa00aa;
+  }
+  .style-word-art {
+    background: linear-gradient(135deg, #003a6a, #005a9a);
+    color: transparent;
+    font-family: 'Bebas Neue', cursive;
+    letter-spacing: 2px;
+    background: #003a6a;
+    -webkit-text-stroke: 1px #fff;
+    color: #4499ff;
+  }
+  .style-bold-red {
+    background: linear-gradient(135deg, #1a0000, #2a0000);
+    color: #ff2222;
+    font-family: 'Bebas Neue', cursive;
+    letter-spacing: 2px;
+    text-shadow: 3px 3px 0 #550000;
+  }
+  .style-silver {
+    background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+    color: #c0c0c0;
+    font-family: 'Bebas Neue', cursive;
+    letter-spacing: 4px;
+    text-shadow: 1px 1px 0 #fff, -1px -1px 0 #333, 2px 2px 4px rgba(0,0,0,0.8);
+  }
+  .style-sonic {
+    background: linear-gradient(135deg, #001a6a, #0028aa);
+    color: #00aaff;
+    font-family: 'Bebas Neue', cursive;
+    letter-spacing: 4px;
+    text-shadow: 2px 2px 0 #0033aa, 0 0 20px rgba(0,170,255,0.5);
+  }
+  .style-kpop {
+    background: linear-gradient(135deg, #1a0030, #2a0050);
+    color: #ff88ff;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-shadow: 0 0 15px #ff00ff;
+  }
+
+  /* BADGE on card */
+  .effect-card .badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background: rgba(255,60,120,0.9);
+    color: white;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+  }
+  .badge.free { background: rgba(0,212,100,0.9); }
+  .badge.new { background: rgba(0,200,255,0.9); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 20px 24px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  /* LIVE PREVIEW MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(8px);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+  }
+
+  .modal h3 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 24px;
+    letter-spacing: 3px;
+    color: var(--accent3);
+    margin-bottom: 8px;
+  }
+
+  .modal .preview-big {
+    min-height: 160px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(28px, 6vw, 52px);
+    font-weight: 900;
+    letter-spacing: 4px;
+    margin: 20px 0;
+    border: 1px solid var(--border);
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 22px;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .modal-close:hover { color: var(--text); }
+
+  .modal-input {
+    width: 100%;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    color: var(--text);
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 16px;
+  }
+  .modal-input:focus { border-color: var(--accent); }
+
+  .modal-actions { display: flex; gap: 10px; justify-content: center; }
+
+  .btn-download {
+    background: linear-gradient(135deg, #00cc66, #009944);
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+  .btn-download:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,200,100,0.4); }
+
+  @media (max-width: 600px) {
+    .effects-grid { grid-template-columns: repeat(2, 1fr); padding: 0 12px 32px; }
+    header { padding: 0 12px; }
+    .promo-banner { flex-direction: column; text-align: center; margin: 12px; }
+    nav a:not(.btn-signup) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">✦ TextStudio</div>
+  <nav>
+    <a href="#" class="active">Home</a>
+    <a href="#">Templates</a>
+    <a href="#">3D Fonts</a>
+    <a href="#">Pro</a>
+    <a href="#" class="btn-signup">Sign Up</a>
+  </nav>
+</header>
+
+<!-- PROMO -->
+<div class="promo-banner">
+  <span class="crown">👑</span>
+  <div class="promo-text">
+    <h3>Unlock Premium Accounts</h3>
+    <p>Access 500+ award-winning fonts with transparent custom backgrounds.</p>
+  </div>
+  <button class="btn-primary">Sign Up Free</button>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>Font Generator &amp;<br>3D Text Effects</h1>
+  <p>Transform your words into real graphic works: gold, neon, fire, metal, graffiti, glitter effects and much more.</p>
+  <div class="search-wrap">
+    <input type="text" id="textInput" placeholder="Type Your Text Here..." value="TextStudio" oninput="updatePreviews()" />
+    <button class="btn-generate" onclick="randomize()">🎲 Randomize</button>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" onclick="filterTab(this,'all')">⭐ Popular</div>
+  <div class="tab" onclick="filterTab(this,'3d')">3D Effects</div>
+  <div class="tab" onclick="filterTab(this,'neon')">Neon & Glow</div>
+  <div class="tab" onclick="filterTab(this,'gold')">Gold & Silver</div>
+  <div class="tab" onclick="filterTab(this,'fire')">Fire & Retro</div>
+  <div class="tab" onclick="filterTab(this,'free')">Free</div>
+</div>
+
+<!-- SECTION LABEL -->
+<div class="section-label">
+  <h2>All Designs</h2>
+  <span id="countLabel">24 styles</span>
+</div>
+
+<!-- EFFECTS GRID -->
+<div class="effects-grid" id="effectsGrid">
+  <!-- Cards injected by JS -->
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('open')">✕</button>
+    <h3 id="modalTitle">PREVIEW</h3>
+    <input class="modal-input" id="modalInput" type="text" value="TextStudio" oninput="updateModal()" />
+    <div class="preview-big" id="modalPreview"></div>
+    <div class="modal-actions">
+      <button class="btn-download" onclick="downloadSVG()">⬇ Download SVG</button>
+      <button class="btn-primary" onclick="copyStyle()">📋 Copy CSS</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 TextStudio — All Rights Reserved &nbsp;|&nbsp; 500+ Font Styles &nbsp;|&nbsp; Made with ❤</p>
+</footer>
+
+<script>
+const effects = [
+  { id:'neon', name:'NEON GLOW', cls:'style-neon', tags:['neon','all'], badge:'FREE', badgeCls:'free' },
+  { id:'fire', name:'FIRE TEXT', cls:'style-fire', tags:['fire','all'], badge:'HOT', badgeCls:'' },
+  { id:'gold', name:'GOLD LOGO', cls:'style-gold', tags:['gold','all'], badge:'PRO', badgeCls:'' },
+  { id:'3d-blue', name:'3D BOLT', cls:'style-3d-blue', tags:['3d','all'], badge:'NEW', badgeCls:'new' },
+  { id:'retro', name:'RETRO WAVE', cls:'style-retro', tags:['fire','all'], badge:'', badgeCls:'' },
+  { id:'chrome', name:'CHROME', cls:'style-chrome', tags:['gold','all'], badge:'FREE', badgeCls:'free' },
+  { id:'minecraft', name:'MINECRAFT', cls:'style-minecraft', tags:['3d','all'], badge:'PRO', badgeCls:'' },
+  { id:'barbie', name:'BARBIE', cls:'style-barbie', tags:['all'], badge:'', badgeCls:'' },
+  { id:'disney', name:'DISNEY', cls:'style-disney', tags:['gold','all'], badge:'PRO', badgeCls:'' },
+  { id:'graffiti', name:'GRAFFITI', cls:'style-graffiti', tags:['fire','all'], badge:'', badgeCls:'' },
+  { id:'ice', name:'ICE COLD', cls:'style-ice', tags:['neon','3d','all'], badge:'NEW', badgeCls:'new' },
+  { id:'elegant', name:'ELEGANT', cls:'style-elegant', tags:['gold','all'], badge:'', badgeCls:'' },
+  { id:'arcade', name:'ARCADE', cls:'style-arcade', tags:['neon','3d','all'], badge:'FREE', badgeCls:'free' },
+  { id:'mario', name:'SUPER MARIO', cls:'style-mario', tags:['fire','3d','all'], badge:'', badgeCls:'' },
+  { id:'luxury', name:'LUXURY', cls:'style-luxury', tags:['gold','all'], badge:'PRO', badgeCls:'' },
+  { id:'cyberpunk', name:'CYBERPUNK', cls:'style-cyberpunk', tags:['neon','3d','all'], badge:'NEW', badgeCls:'new' },
+  { id:'stamp', name:'STAMP', cls:'style-stamp', tags:['all'], badge:'FREE', badgeCls:'free' },
+  { id:'glow-pink', name:'PINK GLOW', cls:'style-glow-pink', tags:['neon','all'], badge:'', badgeCls:'' },
+  { id:'word-art', name:'WORD ART', cls:'style-word-art', tags:['3d','all'], badge:'', badgeCls:'' },
+  { id:'bold-red', name:'BOLD RED', cls:'style-bold-red', tags:['fire','all'], badge:'FREE', badgeCls:'free' },
+  { id:'silver', name:'SILVER', cls:'style-silver', tags:['gold','all'], badge:'', badgeCls:'' },
+  { id:'sonic', name:'SONIC', cls:'style-sonic', tags:['neon','3d','all'], badge:'', badgeCls:'' },
+  { id:'kpop', name:'K-POP', cls:'style-kpop', tags:['neon','all'], badge:'NEW', badgeCls:'new' },
+  { id:'word-art2', name:'COMING SOON', cls:'style-retro', tags:['all'], badge:'FREE', badgeCls:'free' },
+];
+
+let currentFilter = 'all';
+let currentEffect = null;
+
+function renderCards(text, filter) {
+  const grid = document.getElementById('effectsGrid');
+  const filtered = effects.filter(e => e.tags.includes(filter));
+  document.getElementById('countLabel').textContent = filtered.length + ' styles';
+  grid.innerHTML = filtered.map(e => `
+    <div class="effect-card" onclick="openModal('${e.id}')">
+      <div class="preview ${e.cls}">${text || 'TextStudio'}</div>
+      ${e.badge ? `<div class="badge ${e.badgeCls}">${e.badge}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+function updatePreviews() {
+  const text = document.getElementById('textInput').value || 'TextStudio';
+  renderCards(text, currentFilter);
+}
+
+function filterTab(el, tag) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  currentFilter = tag;
+  updatePreviews();
+}
+
+function openModal(id) {
+  currentEffect = effects.find(e => e.id === id);
+  if (!currentEffect) return;
+  const text = document.getElementById('textInput').value || 'TextStudio';
+  document.getElementById('modalInput').value = text;
+  document.getElementById('modalTitle').textContent = currentEffect.name;
+  const preview = document.getElementById('modalPreview');
+  preview.className = 'preview-big ' + currentEffect.cls;
+  preview.textContent = text;
+  document.getElementById('modal').classList.add('open');
+}
+
+function updateModal() {
+  const text = document.getElementById('modalInput').value || 'TextStudio';
+  const preview = document.getElementById('modalPreview');
+  if (currentEffect) {
+    preview.className = 'preview-big ' + currentEffect.cls;
+    preview.textContent = text;
+  }
+}
+
+function closeModal(e) {
+  if (e.target.id === 'modal') document.getElementById('modal').classList.remove('open');
+}
+
+function randomize() {
+  const adjectives = ['EPIC','BLAZING','COSMIC','TURBO','MEGA','ULTRA','PIXEL','HYPER'];
+  const nouns = ['STUDIO','ZONE','LAB','HUB','WORLD','CITY'];
+  const word = adjectives[Math.floor(Math.random()*adjectives.length)] + ' ' + nouns[Math.floor(Math.random()*nouns.length)];
+  document.getElementById('textInput').value = word;
+  updatePreviews();
+}
+
+function downloadSVG() {
+  const text = document.getElementById('modalInput').value || 'TextStudio';
+  const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="120">
+    <defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff3c78"/>
+      <stop offset="100%" style="stop-color:#00d4ff"/>
+    </linearGradient></defs>
+    <rect width="400" height="120" fill="#0a0a0f"/>
+    <text x="200" y="78" font-family="Arial Black" font-size="48" font-weight="900"
+      fill="url(#g)" text-anchor="middle" letter-spacing="4">${text}</text>
+  </svg>`;
+  const blob = new Blob([svgContent], {type:'image/svg+xml'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'text-effect.svg'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function copyStyle() {
+  const css = `.text-effect { font-family: 'Orbitron', sans-serif; font-weight: 900; background: linear-gradient(135deg, #ff3c78, #00d4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 4px; }`;
+  navigator.clipboard.writeText(css).then(() => alert('CSS Copied! 📋'));
+}
+
+// Init
+renderCards('TextStudio', 'all');
+</script>
+</body>
+</html>
